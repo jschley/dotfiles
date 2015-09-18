@@ -7,10 +7,9 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Shortcuts
-alias d="cd ~/Documents/Dropbox"
+alias d="cd ~/Dropbox"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
-alias p="cd ~/projects"
 alias g="git"
 alias h="history"
 alias j="jobs"
@@ -139,3 +138,35 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="exec $SHELL -l"
+
+# Sublime Text 2
+alias st2="/Applications/Sublime\ Text\ 2.app/Contents/MacOS/Sublime\ Text\ 2"
+
+# docker cleanup
+alias docker-clean-safe="docker_cleanup_safe"
+alias docker-clean-full="docker_cleanup"
+
+function docker_cleanup {
+  containers=$(docker ps -a -q | xargs)
+  if [[ ${containers} ]]; then
+    docker rm -f ${containers}
+  fi
+  images=$(docker images -a -q -f dangling=true | xargs)
+  if [[ ${images} ]]; then
+    docker rmi ${images}
+  fi
+}
+
+function docker_cleanup_safe {
+  containers=$(docker ps -a -q -f status=exited | xargs)
+  if [[ ${containers} ]]; then
+    docker rm ${containers}
+  fi
+  images=$(docker images -a -q -f dangling=true | xargs)
+  if [[ ${images} ]]; then
+    docker rmi ${images}
+  fi
+}
+
+# docker env
+alias docker-env="eval \"$(docker-machine env default)\""
